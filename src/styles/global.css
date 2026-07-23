@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* Pretendard variable webfont (from the `pretendard` npm package) */
+@import "pretendard/dist/web/variable/pretendardvariable.css";
+
+/* ---------------------------------------------------------------- */
+/* Design tokens — extracted from the Figma design system.          */
+/* Exposed as Tailwind theme variables, so they generate utilities  */
+/* like `bg-primary`, `text-ink`, `rounded-lg`, `shadow-card`, etc. */
+/* ---------------------------------------------------------------- */
+@theme {
+  /* colors */
+  --color-primary: #4ecdc4; /* Puerto Rico — brand teal */
+  --color-primary-light: #6fdbd3; /* Viking — hover/emphasis */
+  --color-ink: #2e3946; /* Oxford Blue — primary text */
+  --color-ink-muted: #5c6975; /* Shuttle Gray — secondary text */
+  --color-ink-subtle: #8b98a5; /* Regent Gray — tertiary text */
+  --color-porcelain: #f3f6f7; /* Porcelain — neutral background */
+  --color-surface-dark: #0d1117; /* dark card surface */
+
+  /* typography */
+  --font-sans:
+    "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+
+  /* radius */
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+
+  /* elevation */
+  --shadow-card: 0px 40px 80px -30px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------------------------------------------------------------- */
+/* Base                                                              */
+/* ---------------------------------------------------------------- */
+:root {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-porcelain);
+}
