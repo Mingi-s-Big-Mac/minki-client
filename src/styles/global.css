@@ -47,6 +47,30 @@
 }
 
 /* ---------------------------------------------------------------- */
+/* Light theme — applied when `data-theme="light"` is set on <html>. */
+/* We re-map the semantic surface / border / text tokens so every    */
+/* `bg-canvas`, `text-porcelain`, `border-line`, … utility flips      */
+/* without touching a single component.                              */
+/* ---------------------------------------------------------------- */
+:root[data-theme="light"] {
+  /* surfaces */
+  --color-canvas: #f3f6f7; /* page background — Porcelain */
+  --color-surface: #ffffff; /* card surface */
+  --color-field: #f3f6f7; /* input field */
+  --color-chip: #eaeff1; /* skill / tag chip surface */
+
+  /* borders */
+  --color-line: #e3e9ec; /* hairline border */
+  --color-line-strong: #d4dde2; /* stronger border */
+  --color-line-outline: #c7d2d9; /* outline-button border */
+
+  /* text — the light-on-dark text tokens become dark-on-light */
+  --color-porcelain: #2e3946; /* primary text — Oxford Blue */
+  --color-geyser: #5c6975; /* nav / secondary text — Shuttle Gray */
+  /* ink-muted / ink-subtle are mid-grays that read on both themes */
+}
+
+/* ---------------------------------------------------------------- */
 /* Base                                                              */
 /* ---------------------------------------------------------------- */
 :root {
@@ -55,6 +79,12 @@
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 html,
