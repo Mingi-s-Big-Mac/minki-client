@@ -10,13 +10,24 @@
 /* ---------------------------------------------------------------- */
 @theme {
   /* colors */
-  --color-primary: #4ecdc4; /* Puerto Rico — brand teal */
+  --color-primary: #4ecdc4; /* Puerto Rico — brand teal (cyan/55) */
   --color-primary-light: #6fdbd3; /* Viking — hover/emphasis */
-  --color-ink: #2e3946; /* Oxford Blue — primary text */
-  --color-ink-muted: #5c6975; /* Shuttle Gray — secondary text */
-  --color-ink-subtle: #8b98a5; /* Regent Gray — tertiary text */
-  --color-porcelain: #f3f6f7; /* Porcelain — neutral background */
-  --color-surface-dark: #0d1117; /* dark card surface */
+  --color-brand-ink: #06201d; /* Bottle Green — text on brand (cyan/7) */
+  --color-ink: #2e3946; /* Oxford Blue — primary text (azure/23) */
+  --color-ink-muted: #5c6975; /* Shuttle Gray — secondary text (azure/41) */
+  --color-ink-subtle: #8b98a5; /* Regent Gray — tertiary text (azure/60) */
+  --color-geyser: #c7d2d9; /* Geyser — nav / emphasis text (azure/82) */
+  --color-porcelain: #f3f6f7; /* Porcelain — light text (grey/96) */
+  --color-surface-dark: #0d1117; /* legacy dark card surface */
+
+  /* dark theme surfaces */
+  --color-canvas: #070a0f; /* page background (azure/4) */
+  --color-surface: #0f151c; /* card surface (azure/8) */
+  --color-field: #161d26; /* input field (azure/12) */
+  --color-chip: #1b2430; /* skill / tag chip surface (azure/15) */
+  --color-line: #1b232c; /* hairline border (azure/14) */
+  --color-line-strong: #232c36; /* stronger border (azure/17) */
+  --color-line-outline: #2e3946; /* outline-button border (azure/23) */
 
   /* typography */
   --font-sans:
@@ -36,6 +47,30 @@
 }
 
 /* ---------------------------------------------------------------- */
+/* Light theme — applied when `data-theme="light"` is set on <html>. */
+/* We re-map the semantic surface / border / text tokens so every    */
+/* `bg-canvas`, `text-porcelain`, `border-line`, … utility flips      */
+/* without touching a single component.                              */
+/* ---------------------------------------------------------------- */
+:root[data-theme="light"] {
+  /* surfaces */
+  --color-canvas: #f3f6f7; /* page background — Porcelain */
+  --color-surface: #ffffff; /* card surface */
+  --color-field: #f3f6f7; /* input field */
+  --color-chip: #eaeff1; /* skill / tag chip surface */
+
+  /* borders */
+  --color-line: #e3e9ec; /* hairline border */
+  --color-line-strong: #d4dde2; /* stronger border */
+  --color-line-outline: #c7d2d9; /* outline-button border */
+
+  /* text — the light-on-dark text tokens become dark-on-light */
+  --color-porcelain: #2e3946; /* primary text — Oxford Blue */
+  --color-geyser: #5c6975; /* nav / secondary text — Shuttle Gray */
+  /* ink-muted / ink-subtle are mid-grays that read on both themes */
+}
+
+/* ---------------------------------------------------------------- */
 /* Base                                                              */
 /* ---------------------------------------------------------------- */
 :root {
@@ -44,6 +79,12 @@
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 html,
@@ -53,5 +94,6 @@ body,
 }
 
 body {
-  background-color: var(--color-porcelain);
+  background-color: var(--color-canvas);
+  color: var(--color-porcelain);
 }
