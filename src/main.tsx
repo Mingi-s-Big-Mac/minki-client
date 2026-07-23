@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import App from "./App.tsx";
 import { ThemeToggle } from "@/components/ui";
+import { AuthProvider } from "@/features/auth";
 import { applyTheme, getInitialTheme } from "@/lib/theme";
 import "./styles/global.css";
 
@@ -14,7 +15,9 @@ applyTheme(getInitialTheme());
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </BrowserRouter>
     <ThemeToggle />
     <Toaster position="top-center" richColors />
