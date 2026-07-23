@@ -11,6 +11,7 @@ import Ask from "@/pages/app/Ask";
 import Roadmap from "@/pages/app/Roadmap";
 import MyPage from "@/pages/app/MyPage";
 import NotFound from "@/pages/NotFound";
+import { RequireAuth } from "@/features/auth";
 
 /**
  * App routes (react-router-dom). Publishing only — no API yet.
@@ -33,14 +34,70 @@ export default function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/search" element={<Search />} />
-      <Route path="/jobs/:id" element={<JobDetail />} />
-      <Route path="/saved" element={<Saved />} />
-      <Route path="/compare" element={<Compare />} />
-      <Route path="/ask" element={<Ask />} />
-      <Route path="/roadmap" element={<Roadmap />} />
-      <Route path="/mypage" element={<MyPage />} />
+      <Route
+        path="/home"
+        element={
+          <RequireAuth>
+            <Home />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <RequireAuth>
+            <Search />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/jobs/:id"
+        element={
+          <RequireAuth>
+            <JobDetail />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/saved"
+        element={
+          <RequireAuth>
+            <Saved />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/compare"
+        element={
+          <RequireAuth>
+            <Compare />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/ask"
+        element={
+          <RequireAuth>
+            <Ask />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/roadmap"
+        element={
+          <RequireAuth>
+            <Roadmap />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/mypage"
+        element={
+          <RequireAuth>
+            <MyPage />
+          </RequireAuth>
+        }
+      />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

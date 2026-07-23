@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BrandWordmark, IconSearch } from "@/components/brand";
 import { Modal } from "@/components/ui";
+import { useAuth } from "@/features/auth";
 
 interface AppShellProps {
   children: ReactNode;
@@ -16,10 +17,12 @@ interface AppShellProps {
  */
 export function AppShell({ children }: AppShellProps) {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [logoutOpen, setLogoutOpen] = useState(false);
 
-  function confirmLogout() {
+  async function confirmLogout() {
     setLogoutOpen(false);
+    await signOut();
     toast.success("로그아웃되었어요.");
     navigate("/");
   }
