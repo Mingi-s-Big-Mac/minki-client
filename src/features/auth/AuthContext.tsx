@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AUTH_LOGOUT_EVENT } from "@/lib/api";
+import { ApiError, AUTH_LOGOUT_EVENT } from "@/lib/api";
 import {
   clearTokens,
   getCachedUser,
@@ -76,11 +76,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(me);
         setStatus("authenticated");
       })
-      .catch(() => {
+      .catch((err: unknown) => {
         if (!mounted.current) return;
-        // 401은 인터셉터가 refresh를 시도하고, 실패하면 logout 이벤트를 쏜다.
-        // 여기 도달했다는 건 갱신 불가 → 미인증 처리.
-        clearSession();
+        // 401/403(진짜 인증 실패)만 세션을 비운다. 401은 인터셉터가 이미
+        // refresh를 시도하고 실패 시 logout 이벤트를 쏜다.
+        // 429(rate limit)·5xx·네트워크 같은 일시적 오류로는 로그아웃시키지
+        // 않는다 — refresh 토큰이 있으니 캐시된 유저로 세션을 유지한다.
+        const status = err instanceof ApiError ? err.status : 0;
+        if (status === 401 || status === 403) {
+          clearSession();
+        } else {
+          setStatus("authenticated");
+        }
       });
     return () => {
       mounted.current = false;

@@ -14,7 +14,7 @@ import NotFound from "@/pages/NotFound";
 import { RequireAuth } from "@/features/auth";
 
 /**
- * App routes (react-router-dom). Publishing only — no API yet.
+ * App routes (react-router-dom). minki-server API 연동 완료.
  *   /            → 로그인 전 메인 페이지 (Landing)
  *   /login       → 로그인
  *   /signup      → 회원가입

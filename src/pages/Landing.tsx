@@ -34,36 +34,38 @@ export default function Landing() {
   return (
     <div className="min-h-full w-full bg-canvas text-porcelain">
       {/* Header */}
-      <header className="flex h-[65px] items-center justify-between border-b border-line px-10">
-        <Link to="/" aria-label="민기 홈">
-          <BrandWordmark size={24} textSize={17} />
-        </Link>
-
-        <nav className="hidden items-center gap-8 text-[14px] text-geyser md:flex">
-          <a href="#features">기능</a>
-          <a href="#about">소개</a>
-          <a href="#pricing">요금</a>
-        </nav>
-
-        <div className="flex items-center gap-2.5">
-          <Link
-            to="/login"
-            className="rounded-sm border border-line-outline px-[17px] py-2.5 text-[13px] font-semibold text-porcelain transition-colors hover:border-ink-subtle"
-          >
-            로그인
+      <header className="border-b border-line">
+        <div className="mx-auto flex h-[65px] w-full max-w-[1240px] items-center justify-between px-5 sm:px-10">
+          <Link to="/" aria-label="민기 홈">
+            <BrandWordmark size={24} textSize={17} />
           </Link>
-          <Link
-            to="/signup"
-            className="rounded-sm bg-primary px-4 py-2.5 text-[13px] font-bold text-brand-ink transition-colors hover:bg-primary-light"
-          >
-            시작하기
-          </Link>
+
+          <nav className="hidden items-center gap-8 text-[14px] text-geyser md:flex">
+            <a href="#features">기능</a>
+            <a href="#about">소개</a>
+            <a href="#pricing">요금</a>
+          </nav>
+
+          <div className="flex items-center gap-2.5">
+            <Link
+              to="/login"
+              className="rounded-sm border border-line-outline px-[17px] py-2.5 text-[13px] font-semibold text-porcelain transition-colors hover:border-ink-subtle"
+            >
+              로그인
+            </Link>
+            <Link
+              to="/signup"
+              className="rounded-sm bg-primary px-4 py-2.5 text-[13px] font-bold text-brand-ink transition-colors hover:bg-primary-light"
+            >
+              시작하기
+            </Link>
+          </div>
         </div>
       </header>
 
       {/* Hero */}
       <section
-        className="flex flex-col items-center gap-[18px] px-10 pb-[90px] pt-[100px] text-center"
+        className="flex flex-col items-center gap-[18px] px-5 pb-16 pt-16 text-center sm:px-10 sm:pb-[90px] sm:pt-[100px]"
         style={{
           backgroundImage:
             "radial-gradient(60% 90% at 50% 0%, rgba(78,205,196,0.08), rgba(78,205,196,0) 60%)",
@@ -74,8 +76,8 @@ export default function Landing() {
         </span>
 
         <h1
-          className="text-[44px] font-bold text-porcelain"
-          style={{ lineHeight: "57.2px", letterSpacing: "-1px" }}
+          className="text-[32px] font-bold leading-[1.25] text-porcelain sm:text-[44px] sm:leading-[1.3]"
+          style={{ letterSpacing: "-1px" }}
         >
           모든 답변에
           <br />
@@ -107,55 +109,56 @@ export default function Landing() {
       </section>
 
       {/* Features */}
-      <section
-        id="features"
-        className="flex flex-col justify-center gap-5 px-10 pb-[90px] md:flex-row md:items-stretch"
-      >
-        {features.map((f) => (
-          <div
-            key={f.title}
-            className="flex flex-1 flex-col items-start gap-[7px] rounded-2xl border border-line-strong bg-surface p-[29px]"
-          >
-            {f.icon}
-            <h3 className="pt-[15px] text-[17px] font-semibold text-porcelain">
-              {f.title}
-            </h3>
-            <p
-              className="text-[13px] text-ink-subtle"
-              style={{ lineHeight: "22.1px" }}
+      <section id="features" className="px-5 pb-16 sm:px-10 sm:pb-[90px]">
+        <div className="mx-auto flex w-full max-w-[1240px] flex-col justify-center gap-5 md:flex-row md:items-stretch">
+          {features.map((f) => (
+            <div
+              key={f.title}
+              className="flex flex-1 flex-col items-start gap-[7px] rounded-2xl border border-line-strong bg-surface p-[29px]"
             >
-              {f.desc}
-            </p>
-          </div>
-        ))}
-      </section>
-
-      {/* Footer */}
-      <footer className="flex min-h-[172px] flex-col gap-10 border-t border-line px-10 pb-9 pt-[37px] md:flex-row md:items-start md:justify-between">
-        <BrandWordmark size={20} textSize={14} />
-
-        <div className="flex gap-14">
-          {footerColumns.map((col) => (
-            <div key={col.title} className="flex flex-col gap-[9px]">
-              <span className="text-[13px] font-semibold text-porcelain">
-                {col.title}
-              </span>
-              {col.links.map((link) => (
-                <a
-                  key={link}
-                  href="#"
-                  className="text-[13px] text-ink-subtle transition-colors hover:text-geyser"
-                >
-                  {link}
-                </a>
-              ))}
+              {f.icon}
+              <h3 className="pt-[15px] text-[17px] font-semibold text-porcelain">
+                {f.title}
+              </h3>
+              <p
+                className="text-[13px] text-ink-subtle"
+                style={{ lineHeight: "22.1px" }}
+              >
+                {f.desc}
+              </p>
             </div>
           ))}
         </div>
+      </section>
 
-        <p className="self-end text-xs text-ink-muted">
-          © 2026 민기. All rights reserved.
-        </p>
+      {/* Footer */}
+      <footer className="border-t border-line">
+        <div className="mx-auto flex min-h-[172px] w-full max-w-[1240px] flex-col gap-10 px-5 pb-9 pt-[37px] sm:px-10 md:flex-row md:items-start md:justify-between">
+          <BrandWordmark size={20} textSize={14} />
+
+          <div className="flex gap-8 sm:gap-14">
+            {footerColumns.map((col) => (
+              <div key={col.title} className="flex flex-col gap-[9px]">
+                <span className="text-[13px] font-semibold text-porcelain">
+                  {col.title}
+                </span>
+                {col.links.map((link) => (
+                  <a
+                    key={link}
+                    href="#"
+                    className="text-[13px] text-ink-subtle transition-colors hover:text-geyser"
+                  >
+                    {link}
+                  </a>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <p className="self-end text-xs text-ink-muted">
+            © 2026 민기. All rights reserved.
+          </p>
+        </div>
       </footer>
     </div>
   );

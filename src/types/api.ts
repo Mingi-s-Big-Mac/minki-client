@@ -32,6 +32,20 @@ export interface ApiFailure {
 
 export type ApiResponse<T, M = unknown> = ApiSuccess<T, M> | ApiFailure;
 
+/** 목록 응답의 `meta`에 붙는 페이지네이션 정보. */
+export interface PageMeta {
+  page: number;
+  size: number;
+  total: number;
+  totalPages: number;
+}
+
+/** 페이지네이션 목록 응답을 `data`+`meta`로 함께 벗겨낸 형태. */
+export interface Paginated<T> {
+  data: T[];
+  meta: PageMeta;
+}
+
 /**
  * 백엔드에서 내려오는 대표 에러 코드. 문자열 유니온으로 좁혀 두되,
  * 목록에 없는 코드도 올 수 있으므로 `(string & {})`로 확장을 허용한다.

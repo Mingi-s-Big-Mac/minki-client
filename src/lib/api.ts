@@ -9,6 +9,8 @@ import type {
   ApiErrorDetail,
   ApiResponse,
   AuthSession,
+  PageMeta,
+  Paginated,
 } from "@/types/api";
 import {
   clearTokens,
@@ -139,6 +141,11 @@ api.interceptors.response.use(
       | undefined;
     const apiError = toApiError(error);
 
+    // 429(rate limit)는 자동 재시도하지 않는다. 서버 한도가 "분당 10건"이라
+    // 창(60초)이 열릴 때까지 몇 초 뒤 재시도해봐야 소용없고, 오히려 남은
+    // 예산만 갉아먹는다. 사용자에게 서버 메시지("요청이 너무 많습니다")를 그대로
+    // 노출하고, 근본적으로는 요청량 자체를 줄인다(StrictMode 제거 등).
+
     const shouldRefresh =
       apiError.status === 401 &&
       apiError.code === "UNAUTHORIZED" &&
@@ -218,4 +225,31 @@ export async function apiDelete<T>(
   config?: AxiosRequestConfig,
 ): Promise<T> {
   return unwrap<T>(await api.delete<ApiResponse<T>>(url, config));
+}
+
+const EMPTY_META: PageMeta = { page: 1, size: 0, total: 0, totalPages: 0 };
+
+/**
+ * 페이지네이션 목록 GET. `data`(배열)와 `meta`(페이지 정보)를 함께 반환한다.
+ * `meta`가 없는 응답은 전체를 1페이지로 간주한다.
+ */
+export async function apiGetPage<T>(
+  url: string,
+  config?: AxiosRequestConfig,
+): Promise<Paginated<T>> {
+  const res = await api.get<ApiResponse<T[], PageMeta>>(url, config);
+  if (!res.data.success) {
+    throw new ApiError({
+      code: res.data.error.code,
+      message: res.data.error.message,
+      status: 200,
+      details: res.data.error.details,
+      requestId: res.data.requestId,
+    });
+  }
+  const list = res.data.data;
+  return {
+    data: list,
+    meta: res.data.meta ?? { ...EMPTY_META, size: list.length, total: list.length, totalPages: 1 },
+  };
 }

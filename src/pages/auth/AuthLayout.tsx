@@ -16,8 +16,8 @@ interface AuthLayoutProps {
  */
 export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
   return (
-    <div className="flex min-h-full w-full items-center justify-center bg-canvas px-4 py-16">
-      <div className="flex w-full max-w-[494px] flex-col gap-1 rounded-[18px] border border-line-strong bg-surface p-[37px]">
+    <div className="flex min-h-full w-full items-center justify-center bg-canvas px-4 py-10 sm:py-16">
+      <div className="flex w-full max-w-[494px] flex-col gap-1 rounded-[18px] border border-line-strong bg-surface p-6 sm:p-[37px]">
         <Link to="/" className="flex justify-center" aria-label="민기 홈">
           <BrandWordmark size={22} textSize={16} />
         </Link>
