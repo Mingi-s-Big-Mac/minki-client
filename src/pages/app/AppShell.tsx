@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { BrandWordmark, IconSearch } from "@/components/brand";
 import { Modal } from "@/components/ui";
+import { useAuth } from "@/features/auth";
 
 interface AppShellProps {
   children: ReactNode;
@@ -16,51 +17,55 @@ interface AppShellProps {
  */
 export function AppShell({ children }: AppShellProps) {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [logoutOpen, setLogoutOpen] = useState(false);
 
-  function confirmLogout() {
+  async function confirmLogout() {
     setLogoutOpen(false);
+    await signOut();
     toast.success("로그아웃되었어요.");
     navigate("/");
   }
 
   return (
     <div className="min-h-full w-full bg-canvas text-porcelain">
-      <header className="flex h-[65px] items-center justify-between gap-4 border-b border-line bg-surface px-8">
-        <Link
-          to="/home"
-          aria-label="민기 홈"
-          className="flex w-[200px] items-center"
-        >
-          <BrandWordmark size={22} textSize={16} />
-        </Link>
-
-        <button
-          type="button"
-          onClick={() => navigate("/search")}
-          className="flex w-full max-w-[450px] items-center gap-2 rounded-sm border border-line-strong bg-field px-[15px] py-[11px] text-left transition-colors hover:border-ink-subtle"
-        >
-          <IconSearch size={14} />
-          <span className="text-[13px] text-ink-muted">
-            직무, 기술, 자격증 검색
-          </span>
-        </button>
-
-        <nav className="flex w-[200px] items-center justify-end gap-[22px] text-[13px] text-geyser">
+      <header className="border-b border-line bg-surface">
+        <div className="mx-auto flex h-[65px] w-full max-w-[1240px] items-center justify-between gap-3 px-4 sm:gap-4 sm:px-8">
           <Link
-            to="/mypage"
-            className="transition-colors hover:text-porcelain"
+            to="/home"
+            aria-label="민기 홈"
+            className="flex shrink-0 items-center md:w-[200px]"
           >
-            마이페이지
+            <BrandWordmark size={22} textSize={16} />
           </Link>
+
           <button
             type="button"
-            className="transition-colors hover:text-porcelain"
-            onClick={() => setLogoutOpen(true)}
+            onClick={() => navigate("/search")}
+            className="flex w-full min-w-0 max-w-[450px] items-center gap-2 rounded-sm border border-line-strong bg-field px-3 py-[11px] text-left transition-colors hover:border-ink-subtle sm:px-[15px]"
           >
-            로그아웃
+            <IconSearch size={14} />
+            <span className="truncate text-[13px] text-ink-muted">
+              직무, 기술, 자격증 검색
+            </span>
           </button>
-        </nav>
+
+          <nav className="flex shrink-0 items-center justify-end gap-4 text-[13px] text-geyser sm:gap-[22px] md:w-[200px]">
+            <Link
+              to="/mypage"
+              className="transition-colors hover:text-porcelain"
+            >
+              마이페이지
+            </Link>
+            <button
+              type="button"
+              className="transition-colors hover:text-porcelain"
+              onClick={() => setLogoutOpen(true)}
+            >
+              로그아웃
+            </button>
+          </nav>
+        </div>
       </header>
 
       <main className="mx-auto w-full max-w-[1240px]">{children}</main>

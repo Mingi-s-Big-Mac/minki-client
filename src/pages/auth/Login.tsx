@@ -1,19 +1,41 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { TextField } from "@/components/ui";
+import { useAuth } from "@/features/auth";
+import { ApiError } from "@/lib/api";
 import { AuthLayout } from "./AuthLayout";
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // No API yet — publishing only. Give feedback and route to the home dashboard.
-  function handleSubmit(e: FormEvent) {
+  // 가드에 막혀 넘어온 경우 원래 목적지로 되돌려보낸다.
+  const from = (location.state as { from?: Location })?.from?.pathname ?? "/home";
+
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    toast.success("로그인되었어요!");
-    navigate("/home");
+    if (submitting) return;
+    setError(null);
+    setSubmitting(true);
+    try {
+      await signIn({ email, password });
+      toast.success("로그인되었어요!");
+      navigate(from, { replace: true });
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : "로그인에 실패했어요. 잠시 후 다시 시도해주세요.";
+      setError(message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -26,6 +48,7 @@ export default function Login() {
           placeholder="example@university.ac.kr"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <TextField
           label="비밀번호"
@@ -34,7 +57,14 @@ export default function Login() {
           placeholder="••••••••"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
+
+        {error && (
+          <p role="alert" className="text-xs text-red-400">
+            {error}
+          </p>
+        )}
 
         <div className="flex justify-end">
           <button
@@ -48,9 +78,10 @@ export default function Login() {
 
         <button
           type="submit"
-          className="w-full rounded-[9px] bg-primary py-3.5 text-[14px] font-bold text-brand-ink transition-colors hover:bg-primary-light"
+          disabled={submitting}
+          className="w-full rounded-[9px] bg-primary py-3.5 text-[14px] font-bold text-brand-ink transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-60"
         >
-          로그인
+          {submitting ? "로그인 중…" : "로그인"}
         </button>
 
         <p className="pt-px text-center text-[13px] text-ink-subtle">
