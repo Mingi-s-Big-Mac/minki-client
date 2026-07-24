@@ -50,8 +50,9 @@ export interface UserStats {
   roadmapCount: number;
 }
 
-/** 통계 원본. 필드명이 확정 전이라 흔한 후보들을 모두 흡수한다. */
+/** 통계 원본. 저장 직무 수는 실응답이 `interestOccupationCount`로 온다(2026-07-24). */
 interface RawUserStats {
+  interestOccupationCount?: number;
   savedOccupationCount?: number;
   savedCount?: number;
   interestCount?: number;
@@ -65,7 +66,11 @@ export async function getMyStats(): Promise<UserStats> {
   const r = await apiGet<RawUserStats>("/users/me/stats");
   return {
     savedOccupationCount:
-      r.savedOccupationCount ?? r.savedCount ?? r.interestCount ?? 0,
+      r.interestOccupationCount ??
+      r.savedOccupationCount ??
+      r.savedCount ??
+      r.interestCount ??
+      0,
     aiQuestionCount:
       r.aiQuestionCount ?? r.questionCount ?? r.conversationCount ?? 0,
     roadmapCount: r.roadmapCount ?? 0,
