@@ -11,6 +11,7 @@ import {
   type InterestOccupation,
   type RawInterest,
 } from "@/features/interests/interestsApi";
+import { getRecentSearches } from "@/features/search/recentSearches";
 
 /** 최근 검색 기록 1건. */
 export interface RecentSearch {
@@ -57,8 +58,14 @@ export async function getDashboard(): Promise<DashboardData> {
   const fromInterests =
     interestsRes.status === "fulfilled" ? interestsRes.value.data : [];
 
+  // 서버가 최근 검색을 주면 그걸, 아니면 로컬 기록을 폴백으로 쓴다.
+  const serverRecents = raw.recentSearches ?? [];
+  const recentSearches =
+    serverRecents.length > 0 ? serverRecents : getRecentSearches();
+
   return {
     ...raw,
+    recentSearches,
     // 대시보드가 저장 직무를 주면 그걸, 아니면 관심목록을 사용.
     savedOccupations: fromDashboard.length > 0 ? fromDashboard : fromInterests,
   };

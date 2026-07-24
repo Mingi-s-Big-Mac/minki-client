@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { EmptyState, ErrorState, LoadingState, Spinner } from "@/components/ui";
 import { AI_NOT_READY_MESSAGE, isAiNotReady } from "@/features/ai/aiStatus";
 import { useAuth } from "@/features/auth";
 import { gradeLabel } from "@/features/users/grade";
-import { listOccupations } from "@/features/occupations/occupationsApi";
+import { listInterests } from "@/features/interests/interestsApi";
 import {
   createRoadmap,
   deleteRoadmap,
@@ -21,9 +22,9 @@ export default function Roadmap() {
   const { user } = useAuth();
 
   const roadmaps = useQuery(() => listRoadmaps(), []);
-  // 검색 화면과 동일한 기본 size로 조회한다. (size=100은 백엔드 검증에 걸려
-  // 목록이 비면 관심 직무 select가 통째로 비활성화되던 원인이었다.)
-  const occupations = useQuery(() => listOccupations(), []);
+  // 목표 직무 후보는 사용자가 저장한 관심 직무 목록에서 고른다.
+  // (검색에서 '관심 직무 저장'으로 담은 것들.)
+  const occupations = useQuery(() => listInterests(), []);
   const create = useMutation(createRoadmap);
 
   const [major, setMajor] = useState(user?.majorText ?? "");
@@ -109,8 +110,8 @@ export default function Roadmap() {
                   : occupations.error
                     ? "목록을 불러오지 못했어요"
                     : occupationOptions.length === 0
-                      ? "선택 가능한 직무 없음"
-                      : "직무 선택"}
+                      ? "저장한 관심 직무 없음"
+                      : "관심 직무 선택"}
               </option>
               {occupationOptions.map((o) => (
                 <option key={o.id} value={o.id}>
@@ -127,6 +128,19 @@ export default function Roadmap() {
                 다시 불러오기
               </button>
             )}
+            {!occupations.loading &&
+              !occupations.error &&
+              occupationOptions.length === 0 && (
+                <p className="text-[11px] text-ink-muted">
+                  <Link
+                    to="/search"
+                    className="text-primary transition-colors hover:text-primary-light"
+                  >
+                    진로 검색
+                  </Link>
+                  에서 관심 직무를 먼저 저장해주세요.
+                </p>
+              )}
           </div>
 
           <button

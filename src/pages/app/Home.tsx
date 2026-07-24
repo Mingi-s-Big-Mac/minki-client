@@ -14,6 +14,18 @@ interface ActionCardProps {
   desc: string;
 }
 
+/** 탐색 유도용 추천 키워드. 검색 페이지로 바로 넘겨 추가 API 호출은 없다. */
+const POPULAR_KEYWORDS = [
+  "소프트웨어 개발",
+  "데이터 분석",
+  "UX/UI 디자인",
+  "인공지능",
+  "디지털 마케팅",
+  "회계·재무",
+  "생명공학",
+  "전기·전자",
+];
+
 function actionCardClass() {
   return "flex flex-col items-start gap-1 rounded-[14px] border border-line-strong bg-surface p-[23px] text-left transition-colors hover:border-ink-subtle";
 }
@@ -149,6 +161,42 @@ export default function Home() {
             </section>
           </div>
         )}
+
+        {/* 인기 키워드 (정적 탐색 유도 — 추가 API 없음) */}
+        <section className="mt-7 flex flex-col gap-[14px] rounded-[14px] border border-line-strong bg-surface p-[23px]">
+          <h2 className="text-[14px] font-semibold text-porcelain">
+            이런 키워드로 찾아보세요
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {POPULAR_KEYWORDS.map((keyword) => (
+              <Link
+                key={keyword}
+                to={`/search?query=${encodeURIComponent(keyword)}`}
+                className="rounded-full border border-line-strong px-3.5 py-1.5 text-[13px] text-geyser transition-colors hover:border-ink-subtle hover:text-porcelain"
+              >
+                {keyword}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* 로드맵 생성 유도 배너 */}
+        <section className="mt-[18px] flex flex-col items-start gap-4 rounded-[14px] border border-primary/30 bg-primary/5 p-[23px] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-[15px] font-semibold text-porcelain">
+              나만의 진로 로드맵을 만들어보세요
+            </h2>
+            <p className="text-[13px] text-ink-subtle">
+              학년·전공·목표를 입력하면 학기별 실행 계획을 제안해드려요.
+            </p>
+          </div>
+          <Link
+            to="/roadmap"
+            className="shrink-0 rounded-[9px] bg-primary px-[22px] py-2.5 text-[13px] font-bold text-brand-ink transition-colors hover:bg-primary-light"
+          >
+            로드맵 만들기
+          </Link>
+        </section>
       </div>
     </AppShell>
   );

@@ -14,6 +14,7 @@ import {
   type OccupationFilter,
   type OccupationSummary,
 } from "@/features/occupations/occupationsApi";
+import { addRecentSearch } from "@/features/search/recentSearches";
 import type { Paginated } from "@/types/api";
 import { cn } from "@/lib/cn";
 import { useQuery } from "@/lib/useQuery";
@@ -60,6 +61,11 @@ export default function Search() {
 
   const [input, setInput] = useState(query);
   useEffect(() => setInput(query), [query]);
+
+  // 검색어가 있으면 로컬 최근 검색 기록에 남긴다(홈 대시보드 폴백용, 추가 API 없음).
+  useEffect(() => {
+    if (query) addRecentSearch(query);
+  }, [query]);
 
   const { data, loading, error, refetch } = useQuery(
     () => listOccupations({ query: query || undefined, filter, page }),

@@ -12,6 +12,12 @@ import {
   sendMessage,
   type ConversationMessage,
 } from "@/features/conversations/conversationsApi";
+import {
+  deriveTitle,
+  getConversationTitle,
+  removeConversationTitle,
+  setConversationTitle,
+} from "@/features/conversations/conversationTitles";
 import { cn } from "@/lib/cn";
 import { useQuery } from "@/lib/useQuery";
 import { AppShell } from "./AppShell";
@@ -102,6 +108,7 @@ export default function Ask() {
     if (detail.data) setMessages(detail.data.messages ?? []);
   }, [detail.data]);
 
+  // 버튼을 누르면 바로 대화를 만든다. 제목은 첫 질문을 보낼 때 붙는다.
   async function handleNewConversation() {
     if (creating) return;
     setCreating(true);
@@ -121,6 +128,7 @@ export default function Ask() {
   async function handleDelete(id: string) {
     try {
       await deleteConversation(id);
+      removeConversationTitle(id);
       if (id === activeId) {
         setActiveId(null);
         setMessages([]);
@@ -157,17 +165,23 @@ export default function Ask() {
     const content = draft.trim();
     if (!content || sending) return;
 
+    // 이 대화의 첫 질문이면 그걸 제목으로 삼는다.
+    const isFirstMessage = messages.length === 0;
+
     setSending(true);
     setDraft("");
 
-    // 활성 대화가 없으면 먼저 생성.
+    // 활성 대화가 없으면 생성(본문은 비워 보냄 — 백엔드가 title 필드를 거부해
+    // 생성이 실패하지 않도록). 제목은 아래에서 로컬에만 저장한다.
     let conversationId = activeId;
+    // 목록이 바뀔 때(새 대화 생성·제목 부여)만 refetch해 요청을 아낀다.
+    let listChanged = false;
     if (!conversationId) {
       try {
         const created = await createConversation();
         conversationId = created.id;
         setActiveId(created.id);
-        await list.refetch();
+        listChanged = true;
       } catch {
         toast.error("대화를 시작하지 못했어요.");
         setDraft(content);
@@ -175,6 +189,13 @@ export default function Ask() {
         return;
       }
     }
+
+    // 첫 질문이고 아직 제목이 없으면 질문에서 제목을 뽑아 사이드바에 반영한다.
+    if (isFirstMessage && !getConversationTitle(conversationId)) {
+      setConversationTitle(conversationId, deriveTitle(content));
+      listChanged = true;
+    }
+    if (listChanged) await list.refetch();
 
     // 유저 메시지 낙관적 표시.
     setMessages((prev) => [...prev, { role: "user", content }]);

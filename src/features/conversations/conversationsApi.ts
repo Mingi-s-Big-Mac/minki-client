@@ -8,6 +8,7 @@
  */
 import { apiDelete, apiGet, apiGetPage, apiPost } from "@/lib/api";
 import type { Paginated } from "@/types/api";
+import { getConversationTitle } from "./conversationTitles";
 
 /** 대화 메시지 1건. */
 export interface ConversationMessage {
@@ -135,7 +136,19 @@ export async function listConversations(): Promise<
   Paginated<ConversationSummary>
 > {
   const page = await apiGetPage<RawConversation>("/conversations");
-  return { ...page, data: page.data.map(toSummary) };
+  return {
+    ...page,
+    data: page.data.map((r) => {
+      const summary = toSummary(r);
+      // 서버가 제목을 안 주면(빈 title/name) 로컬 제목을 폴백으로 쓴다.
+      const hasServerTitle = !!(r.title ?? r.name ?? "").trim();
+      if (!hasServerTitle) {
+        const local = getConversationTitle(r.id);
+        if (local) return { ...summary, title: local };
+      }
+      return summary;
+    }),
+  };
 }
 
 /** 새 대화 생성. 첫 메시지/제목은 선택. */

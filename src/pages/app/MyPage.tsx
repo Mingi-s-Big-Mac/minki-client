@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, type FormEvent, type ReactNode } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { IconChat, IconRoadmap, IconSearch } from "@/components/brand";
 import { Modal, TextField } from "@/components/ui";
 import { useAuth } from "@/features/auth";
 import { GRADE_OPTIONS, gradeLabel } from "@/features/users/grade";
@@ -31,6 +32,33 @@ export default function MyPage() {
     { value: stats.data?.savedOccupationCount, label: "저장한 직무 수" },
     { value: stats.data?.aiQuestionCount, label: "AI 질문 수" },
     { value: stats.data?.roadmapCount, label: "생성한 로드맵 수" },
+  ];
+
+  // 내 활동 바로가기(정적 네비게이션 — 추가 API 없음).
+  const shortcuts: {
+    to: string;
+    icon: ReactNode;
+    title: string;
+    desc: string;
+  }[] = [
+    {
+      to: "/saved",
+      icon: <IconSearch size={22} />,
+      title: "관심 직무",
+      desc: "저장한 직무 목록 보기",
+    },
+    {
+      to: "/ask",
+      icon: <IconChat size={22} />,
+      title: "AI 질문하기",
+      desc: "진로 궁금증 바로 물어보기",
+    },
+    {
+      to: "/roadmap",
+      icon: <IconRoadmap size={22} />,
+      title: "내 로드맵",
+      desc: "생성한 로드맵 확인하기",
+    },
   ];
 
   return (
@@ -98,6 +126,28 @@ export default function MyPage() {
             </div>
           </div>
         </div>
+
+        {/* 내 활동 바로가기 */}
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[14px] font-semibold text-porcelain">
+            내 활동 바로가기
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {shortcuts.map((s) => (
+              <Link
+                key={s.to}
+                to={s.to}
+                className="flex flex-col items-start gap-2 rounded-[14px] border border-line-strong bg-surface p-[21px] transition-colors hover:border-ink-subtle"
+              >
+                {s.icon}
+                <span className="pt-1 text-[14px] font-semibold text-porcelain">
+                  {s.title}
+                </span>
+                <span className="text-[12px] text-ink-subtle">{s.desc}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <p className="text-[12px] text-ink-muted">
           계정을 더 이상 사용하지 않으신다면{" "}
